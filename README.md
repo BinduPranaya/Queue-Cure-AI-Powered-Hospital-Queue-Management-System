@@ -5,6 +5,8 @@
 Queue Cure replaces manual, paper-token queue handling in clinics with a live, web-based system. Receptionists manage the queue from a dashboard; patients see their token, their position, and their estimated wait time update instantly on a screen — no refresh required.
 
 ---
+## Deployed Link
+(#https://queue-cure-ai-powered-hospital-queu.vercel.app)
 
 ## Table of Contents
 
