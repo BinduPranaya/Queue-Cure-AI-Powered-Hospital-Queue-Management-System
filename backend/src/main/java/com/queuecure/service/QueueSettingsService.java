@@ -6,35 +6,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Manages the single {@link QueueSettings} row that holds global queue
- * state: average consultation time, the current token, and the last
- * generated token. Ensures a settings row always exists (creating sensible
- * defaults on first use) so the rest of the application can rely on it
- * being present.
- */
 @Service
 @RequiredArgsConstructor
 public class QueueSettingsService {
 
-    private static final int DEFAULT_AVERAGE_CONSULTATION_TIME = 10;
-
     private final QueueSettingsRepository queueSettingsRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public QueueSettings getOrCreateSettings() {
-        return queueSettingsRepository.findAll().stream()
-                .findFirst()
-                .orElseGet(this::createDefaultSettings);
-    }
 
-    private QueueSettings createDefaultSettings() {
-        QueueSettings settings = QueueSettings.builder()
-                .averageConsultationTime(DEFAULT_AVERAGE_CONSULTATION_TIME)
-                .currentToken(0)
-                .lastGeneratedToken(0)
-                .build();
-        return queueSettingsRepository.save(settings);
+        return queueSettingsRepository.findAll()
+                .stream()
+                .findFirst()
+                .orElseGet(() -> {
+                    QueueSettings settings = new QueueSettings();
+                    settings.setAverageConsultationTime(10);
+                    settings.setCurrentToken(0);
+                    settings.setLastGeneratedToken(0);
+                    return settings;
+                });
     }
 
     @Transactional
