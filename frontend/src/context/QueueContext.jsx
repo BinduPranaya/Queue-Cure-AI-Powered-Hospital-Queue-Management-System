@@ -51,6 +51,13 @@ export function QueueProvider({ children }) {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshFromServer();
 
+    const handleSocketDisconnected = () => {
+      setConnected(false);
+      if (!pollRef.current) {
+        pollRef.current = setInterval(refreshFromServer, 5000);
+      }
+    };
+
     const client = createQueueSocketClient({
       onMessage: handleSocketMessage,
       onConnected: () => {
@@ -62,15 +69,8 @@ export function QueueProvider({ children }) {
         // Re-sync once on (re)connect in case we missed events while offline.
         refreshFromServer();
       },
-      onDisconnected: () => {
-        setConnected(false);
-        if (!pollRef.current) {
-          pollRef.current = setInterval(refreshFromServer, 5000);
-        }
-      },
-      onError: () => {
-        setConnected(false);
-      },
+      onDisconnected: handleSocketDisconnected,
+      onError: handleSocketDisconnected,
     });
 
     clientRef.current = client;
@@ -80,6 +80,7 @@ export function QueueProvider({ children }) {
       client.deactivate();
       if (pollRef.current) {
         clearInterval(pollRef.current);
+        pollRef.current = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
