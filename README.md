@@ -52,7 +52,7 @@ Queue Cure solves this with a persistent, database-backed queue and real-time up
 |-------------|------------|
 | Backend     | Java 21, Spring Boot 3, Spring Data JPA, Spring WebSocket (STOMP) |
 | AI Service  | Python, FastAPI, scikit-learn (RandomForestRegressor) |
-| Database    | MySQL 8 |
+| Database    | PostgreSQL 16 |
 | Frontend    | React (Vite), React Router, Axios, SockJS, @stomp/stompjs, Tailwind CSS |
 | Deployment  | Docker, Docker Compose, Nginx (frontend), Spring Boot embedded Tomcat (backend) |
 
@@ -63,7 +63,7 @@ Queue Cure solves this with a persistent, database-backed queue and real-time up
 │   Receptionist Dashboard │ ──────────────────────────▶ │                          │
 │   (React, /dashboard)    │ ◀────────────────────────── │     Spring Boot API      │
 └──────────────────────────┘      WebSocket (STOMP)      │  Controller → Service →  │
-            ▲                  ┌────────────────────────▶│   Repository → MySQL     │
+            ▲                  ┌────────────────────────▶            │   Repository → PostgreSQL│
             │                  │                          │                          │
 ┌──────────────────────────┐   │                          └──────────────────────────┘
 │   Patient Waiting Room    │──┘                                      │
@@ -252,7 +252,7 @@ All errors follow a consistent shape with the appropriate HTTP status code:
          ▼
  Spring Boot Backend
          │
-         │  2. Persist change to MySQL
+         │  2. Persist change to PostgreSQL
          │  3. Recompute queue status + waiting list
          ▼
  WebSocket Topic  (/topic/queue)
@@ -280,7 +280,7 @@ Every event payload includes the full current `queueStatus` and `waitingPatients
 - Maven 3.9+
 - Node.js 20+
 - Python 3.12+ (for the AI prediction service)
-- MySQL 8 (or Docker)
+- PostgreSQL 16 (or Docker)
 
 ### Option A — Run with Docker Compose (recommended)
 
@@ -288,14 +288,14 @@ Every event payload includes the full current `queueStatus` and `waitingPatients
 docker compose up --build
 ```
 
-This starts MySQL, the AI prediction service (port 8000), the backend (port 8080), and the frontend (port 5173) together.
+This starts PostgreSQL, the AI prediction service (port 8000), the backend (port 8080), and the frontend (port 5173) together.
 
 ### Option B — Run manually
 
-**1. Start MySQL** and create the database (or let Spring Boot auto-create it):
+**1. Start PostgreSQL** and create the database (or let Spring Boot auto-create the tables):
 
 ```sql
-CREATE DATABASE IF NOT EXISTS queue_cure;
+CREATE DATABASE queue_cure;
 ```
 
 **2. AI Prediction Service**
@@ -313,7 +313,7 @@ The model trains automatically on first startup (see [`ai-service/README.md`](ai
 
 ```bash
 cd backend
-# Edit src/main/resources/application.yml if your MySQL credentials
+# Edit src/main/resources/application.yml if your PostgreSQL credentials
 # or AI service URL differ
 mvn spring-boot:run
 ```

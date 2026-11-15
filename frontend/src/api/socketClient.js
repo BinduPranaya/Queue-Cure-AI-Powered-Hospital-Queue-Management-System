@@ -12,7 +12,7 @@ const QUEUE_TOPIC = "/topic/queue";
  */
 export function createQueueSocketClient({ onMessage, onConnected, onDisconnected, onError }) {
   const client = new Client({
-    webSocketFactory: () => new SockJS(`${API_BASE_URL}/ws`),
+    webSocketFactory: () => new SockJS(`${API_BASE_URL.replace(/\/$/, "")}/ws`),
     reconnectDelay: 3000,
     heartbeatIncoming: 10000,
     heartbeatOutgoing: 10000,
@@ -35,6 +35,10 @@ export function createQueueSocketClient({ onMessage, onConnected, onDisconnected
 
     onWebSocketClose: () => {
       onDisconnected?.();
+    },
+
+    onWebSocketError: (event) => {
+      onError?.(event);
     },
 
     onStompError: (frame) => {

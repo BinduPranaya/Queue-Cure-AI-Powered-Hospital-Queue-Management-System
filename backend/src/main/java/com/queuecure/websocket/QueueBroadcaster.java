@@ -28,7 +28,7 @@ public class QueueBroadcaster {
             // A broadcast failure should never break the originating REST
             // request - we log it so it can be investigated, but the HTTP
             // response to the receptionist/patient still succeeds since
-            // the change is already persisted in MySQL.
+            // the change is already persisted in PostgreSQL.
             log.error("Failed to broadcast queue update event [{}]: {}", event.eventType(), ex.getMessage(), ex);
         }
     }

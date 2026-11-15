@@ -4,6 +4,7 @@ import { getPatientByToken, getPrediction } from "../api/queueApi";
 import { useQueue } from "../hooks/useQueue";
 import TokenBoard from "../components/TokenBoard";
 import PredictionCard from "../components/PredictionCard";
+import BrandLogo from "../components/BrandLogo";
 
 export default function MyTokenLookup() {
   const [tokenInput, setTokenInput] = useState("");
@@ -62,7 +63,7 @@ export default function MyTokenLookup() {
         <Link to="/waiting-room" className="text-sm font-semibold text-clinic-mint/70 hover:text-clinic-mint">
           ← Back
         </Link>
-        <span className="text-sm font-bold text-clinic-mint">Queue Cure</span>
+        <BrandLogo dark compact />
       </div>
 
       <form onSubmit={handleSearch} className="w-full max-w-sm flex gap-2">

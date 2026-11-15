@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useQueue } from "../hooks/useQueue";
 import TokenBoard from "../components/TokenBoard";
+import BrandLogo from "../components/BrandLogo";
 
 export default function PatientWaitingRoom() {
   const { queueStatus, loading, connected } = useQueue();
@@ -8,13 +9,16 @@ export default function PatientWaitingRoom() {
   return (
     <div className="min-h-screen bg-clinic-tealDark flex flex-col">
       <header className="flex items-center justify-between px-5 sm:px-8 py-5">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-clinic-mint font-display font-bold text-clinic-tealDark text-sm">
-            QC
-          </div>
-          <span className="font-sans font-bold text-clinic-mint">Queue Cure</span>
+        <BrandLogo dark />
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="text-xs font-bold text-clinic-mint/60 transition-colors hover:text-clinic-mint"
+          >
+            ← Home
+          </Link>
+          <LiveIndicatorDark connected={connected} />
         </div>
-        <LiveIndicatorDark connected={connected} />
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 gap-8">
