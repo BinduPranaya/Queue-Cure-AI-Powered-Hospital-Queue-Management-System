@@ -1,19 +1,20 @@
 version: "3.9"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: queue-cure-mysql
+  postgres:
+    image: postgres:16
+    container_name: queue-cure-postgres
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: queue_cure
+      POSTGRES_USER: queue_cure
+      POSTGRES_PASSWORD: queue_cure
+      POSTGRES_DB: queue_cure
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - queue_cure_mysql_data:/var/lib/mysql
+      - queue_cure_postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      test: ["CMD-SHELL", "pg_isready -U queue_cure -d queue_cure"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -32,16 +33,16 @@ services:
     container_name: queue-cure-backend
     restart: unless-stopped
     depends_on:
-      mysql:
+      postgres:
         condition: service_healthy
       ai-service:
         condition: service_started
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/queue_cure?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-      APP_CORS_ALLOWED_ORIGINS: http://localhost:5173,http://localhost:80,http://localhost
-      APP_AI_SERVICE_BASE_URL: http://ai-service:8000
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/queue_cure
+      SPRING_DATASOURCE_USERNAME: queue_cure
+      SPRING_DATASOURCE_PASSWORD: queue_cure
+      CORS_ALLOWED_ORIGINS: http://localhost:5173,http://localhost:80,http://localhost
+      AI_SERVICE_URL: http://ai-service:8000
     ports:
       - "8080:8080"
 
@@ -58,4 +59,4 @@ services:
       - "5173:80"
 
 volumes:
-  queue_cure_mysql_data:
+  queue_cure_postgres_data:

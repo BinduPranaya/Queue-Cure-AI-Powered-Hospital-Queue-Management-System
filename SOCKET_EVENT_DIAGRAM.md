@@ -4,7 +4,7 @@
 sequenceDiagram
     participant R as Receptionist Dashboard
     participant API as Spring Boot REST API
-    participant DB as MySQL
+    participant DB as PostgreSQL
     participant WS as WebSocket Topic (/topic/queue)
     participant P as Patient Waiting Room
 
@@ -54,4 +54,4 @@ sequenceDiagram
 }
 ```
 
-Every connected client (any number of dashboard tabs and patient screens) receives the same broadcast, so the entire system stays in sync from a single source of truth in MySQL.
+Every connected client (any number of dashboard tabs and patient screens) receives the same broadcast, so the entire system stays in sync from a single source of truth in PostgreSQL.

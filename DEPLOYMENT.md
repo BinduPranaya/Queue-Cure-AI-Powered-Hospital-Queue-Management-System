@@ -4,7 +4,7 @@ This guide covers deploying Queue Cure's backend, frontend, and database to comm
 
 ## 1. Docker Compose (single host)
 
-The simplest path — runs MySQL, the AI prediction service, backend, and frontend together on one machine or VM.
+The simplest path — runs PostgreSQL, the AI prediction service, backend, and frontend together on one machine or VM.
 
 ```bash
 docker compose up --build -d
@@ -13,7 +13,7 @@ docker compose up --build -d
 - Frontend: `http://<host>:5173`
 - Backend: `http://<host>:8080`
 - AI Service: `http://<host>:8000`
-- MySQL data persists in the `queue_cure_mysql_data` volume.
+- PostgreSQL data persists in the `queue_cure_postgres_data` volume.
 
 To point the frontend at a different backend host in production, set the build arg:
 
@@ -39,7 +39,7 @@ If this service is down, slow, or returns an error, the backend automatically fa
 cd backend
 mvn clean package -DskipTests
 java -jar target/queue-cure-backend-1.0.0.jar \
-  --spring.datasource.url=jdbc:mysql://<db-host>:3306/queue_cure \
+  --spring.datasource.url=jdbc:postgresql://<db-host>:5432/queue_cure \
   --spring.datasource.username=<user> \
   --spring.datasource.password=<password> \
   --app.cors.allowed-origins=https://yourdomain.com
@@ -49,8 +49,8 @@ Any Spring Boot property can be overridden via `--property=value`, environment v
 
 ### Cloud options
 
-- **Render / Railway**: deploy the backend as a Docker service. If the service root directory is the repository root, use the root `Dockerfile`. If the service root directory is `backend`, use `backend/Dockerfile`. Add a managed MySQL instance and set the `SPRING_DATASOURCE_*` env vars.
-- **AWS Elastic Beanstalk / ECS**: build and push the Docker image, point `SPRING_DATASOURCE_URL` at an RDS MySQL instance.
+- **Render / Railway**: deploy the backend as a Docker service. If the service root directory is the repository root, use the root `Dockerfile`. If the service root directory is `backend`, use `backend/Dockerfile`. Add a managed PostgreSQL instance and set the `SPRING_DATASOURCE_*` env vars.
+- **AWS Elastic Beanstalk / ECS**: build and push the Docker image, point `SPRING_DATASOURCE_URL` at a PostgreSQL instance.
 - **A plain VM**: use a `systemd` service running `java -jar app.jar` behind Nginx/Caddy for TLS termination.
 
 ### Render backend settings
@@ -64,7 +64,7 @@ For a Render Web Service using the repository root:
 Set these variables on the backend service:
 
 ```text
-SPRING_DATASOURCE_URL=jdbc:mysql://<host>:3306/<database>?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+SPRING_DATASOURCE_URL=jdbc:postgresql://<host>:5432/<database>
 SPRING_DATASOURCE_USERNAME=<user>
 SPRING_DATASOURCE_PASSWORD=<password>
 CORS_ALLOWED_ORIGINS=https://<your-frontend-domain>
@@ -92,7 +92,7 @@ Upload the contents of `dist/` to:
 
 ## 5. Database
 
-- For production, use a managed MySQL service (AWS RDS, PlanetScale, Railway MySQL, etc.) rather than the bundled Docker container.
+- For production, use a managed PostgreSQL service (Render PostgreSQL, Railway PostgreSQL, Neon, Supabase, or AWS RDS) rather than the bundled Docker container.
 - Set `spring.jpa.hibernate.ddl-auto=validate` (instead of `update`) once the schema is stable, and manage migrations with a tool like Flyway or Liquibase for safer schema changes over time.
 
 ## 6. CORS & WebSocket considerations
@@ -105,9 +105,9 @@ Upload the contents of `dist/` to:
 
 | Variable | Where | Purpose |
 |----------|-------|---------|
-| `SPRING_DATASOURCE_URL` | Backend | MySQL JDBC URL |
-| `SPRING_DATASOURCE_USERNAME` | Backend | MySQL username |
-| `SPRING_DATASOURCE_PASSWORD` | Backend | MySQL password |
+| `SPRING_DATASOURCE_URL` | Backend | PostgreSQL JDBC URL |
+| `SPRING_DATASOURCE_USERNAME` | Backend | PostgreSQL username |
+| `SPRING_DATASOURCE_PASSWORD` | Backend | PostgreSQL password |
 | `CORS_ALLOWED_ORIGINS` | Backend | Comma-separated allowed frontend origins |
 | `AI_SERVICE_URL` | Backend | Base URL of the FastAPI AI prediction service |
 | `JPA_DDL_AUTO` | Backend | Database schema mode; use `update` for the first deployment |
