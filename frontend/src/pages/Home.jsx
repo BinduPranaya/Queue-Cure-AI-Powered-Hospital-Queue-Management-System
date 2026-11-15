@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom";
 import { BellRingIcon, ChevronRightIcon, ClockIcon, TokenIcon } from "../components/icons";
+import BrandLogo from "../components/BrandLogo";
 
 export default function Home() {
   return (
     <div className="min-h-screen overflow-hidden bg-clinic-paper text-clinic-ink">
       <header className="relative z-10 mx-auto flex w-full max-w-7xl items-center justify-between px-5 py-5 sm:px-8 lg:px-12">
-        <Link to="/" className="flex items-center gap-3" aria-label="Queue Cure home">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-clinic-teal font-display text-sm font-bold text-clinic-mint shadow-token">
-            QC
-          </span>
-          <span className="font-display text-sm font-bold tracking-tight text-clinic-tealDark">QUEUE CURE</span>
+        <Link to="/" aria-label="CareQueue AI home">
+          <BrandLogo />
         </Link>
         <div className="flex items-center gap-4 text-sm">
           <Link to="/waiting-room/my-token" className="hidden font-semibold text-clinic-ink/60 transition-colors hover:text-clinic-teal sm:block">
@@ -38,7 +36,7 @@ export default function Home() {
               <span className="text-clinic-coral">More caring.</span>
             </h1>
             <p className="mt-7 max-w-xl text-base leading-7 text-clinic-ink/60 sm:text-lg">
-              Queue Cure makes every clinic visit feel more predictable. Follow the live queue,
+              CareQueue AI makes every clinic visit feel more predictable. Follow the live queue,
               get smarter wait-time estimates, and keep your team moving.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -119,7 +117,7 @@ export default function Home() {
       </main>
 
       <footer className="mx-auto flex max-w-7xl flex-col gap-2 border-t border-clinic-teal/10 px-5 py-6 text-xs text-clinic-ink/45 sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
-        <span className="font-display font-bold text-clinic-teal">QUEUE CURE</span>
+        <BrandLogo compact />
         <span>Better queues, better care.</span>
       </footer>
     </div>
