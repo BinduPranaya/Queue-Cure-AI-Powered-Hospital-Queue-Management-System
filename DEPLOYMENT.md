@@ -69,6 +69,7 @@ SPRING_DATASOURCE_USERNAME=<user>
 SPRING_DATASOURCE_PASSWORD=<password>
 CORS_ALLOWED_ORIGINS=https://<your-frontend-domain>
 AI_SERVICE_URL=https://<your-ai-service-domain>
+JPA_DDL_AUTO=update
 ```
 
 Render supplies `PORT`; the backend reads it automatically through `application.yml`.
@@ -109,4 +110,5 @@ Upload the contents of `dist/` to:
 | `SPRING_DATASOURCE_PASSWORD` | Backend | MySQL password |
 | `CORS_ALLOWED_ORIGINS` | Backend | Comma-separated allowed frontend origins |
 | `AI_SERVICE_URL` | Backend | Base URL of the FastAPI AI prediction service |
+| `JPA_DDL_AUTO` | Backend | Database schema mode; use `update` for the first deployment |
 | `VITE_API_BASE_URL` | Frontend (build-time) | Backend base URL for REST + WebSocket |
