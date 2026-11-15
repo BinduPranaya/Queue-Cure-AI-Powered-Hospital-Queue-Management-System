@@ -1,6 +1,7 @@
 import LiveIndicator from "./LiveIndicator";
 import { useQueue } from "../hooks/useQueue";
 import BrandLogo from "./BrandLogo";
+import { Link } from "react-router-dom";
 
 export default function DashboardHeader() {
   const { connected } = useQueue();
@@ -14,7 +15,15 @@ export default function DashboardHeader() {
             <p className="text-xs text-clinic-ink/50 leading-tight">Receptionist Dashboard</p>
           </div>
         </div>
-        <LiveIndicator connected={connected} />
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="text-xs font-bold text-clinic-ink/50 transition-colors hover:text-clinic-teal"
+          >
+            ← Home
+          </Link>
+          <LiveIndicator connected={connected} />
+        </div>
       </div>
     </header>
   );

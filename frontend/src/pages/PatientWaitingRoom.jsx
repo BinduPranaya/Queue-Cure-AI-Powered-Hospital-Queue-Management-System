@@ -10,7 +10,15 @@ export default function PatientWaitingRoom() {
     <div className="min-h-screen bg-clinic-tealDark flex flex-col">
       <header className="flex items-center justify-between px-5 sm:px-8 py-5">
         <BrandLogo dark />
-        <LiveIndicatorDark connected={connected} />
+        <div className="flex items-center gap-3">
+          <Link
+            to="/"
+            className="text-xs font-bold text-clinic-mint/60 transition-colors hover:text-clinic-mint"
+          >
+            ← Home
+          </Link>
+          <LiveIndicatorDark connected={connected} />
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-8 gap-8">
